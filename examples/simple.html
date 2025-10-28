@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SegmentDisplay - Simple Example</title>
+    <link rel="stylesheet" href="../src/segment-display.css">
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #0a0e27;
+            color: #e0e6ff;
+            padding: 40px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+        }
+        
+        h1 {
+            margin-bottom: 40px;
+        }
+        
+        .display-container {
+            background: #151b3b;
+            border-radius: 20px;
+            padding: 40px;
+            margin-bottom: 30px;
+        }
+        
+        .controls {
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+        
+        button {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            background: #4a90e2;
+            color: white;
+            transition: transform 0.2s;
+        }
+        
+        button:hover {
+            transform: translateY(-2px);
+        }
+    </style>
+</head>
+<body>
+    <h1>SegmentDisplay Library - Simple Example</h1>
+    
+    <div class="display-container">
+        <div id="myDisplay"></div>
+    </div>
+    
+    <div class="controls">
+        <button onclick="display.setText('HELLO')">Hello</button>
+        <button onclick="display.setText('WORLD')">World</button>
+        <button onclick="display.setText('12345678')">Numbers</button>
+        <button onclick="display.setRainbowMode(true)">Rainbow On</button>
+        <button onclick="display.setRainbowMode(false)">Rainbow Off</button>
+        <button onclick="display.randomizeColors()">Random Colors</button>
+        <button onclick="display.startScrolling()">Start Scroll</button>
+        <button onclick="display.stopScrolling()">Stop Scroll</button>
+    </div>
+
+    <script src="../src/SegmentDisplay.js"></script>
+    <script>
+        // Create a new display
+        const display = new SegmentDisplay('#myDisplay', {
+            text: 'SEGMENT DISPLAY',
+            digitCount: 8,
+            scrollSpeed: 200,
+            scrolling: true
+        });
+
+        // Example: Change text after 5 seconds
+        setTimeout(() => {
+            display.setText('AWESOME!');
+        }, 5000);
+    </script>
+</body>
+</html>

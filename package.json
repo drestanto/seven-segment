@@ -1,0 +1,48 @@
+{
+  "name": "segment-display",
+  "version": "1.0.0",
+  "description": "A modern 7-segment display library with multi-color segments and full character mapping",
+  "main": "dist/segment-display.min.js",
+  "module": "src/SegmentDisplay.js",
+  "style": "dist/segment-display.min.css",
+  "types": "dist/SegmentDisplay.d.ts",
+  "files": [
+    "dist/",
+    "src/",
+    "LICENSE",
+    "README.md"
+  ],
+  "scripts": {
+    "build": "npm run build:js && npm run build:css",
+    "build:js": "terser src/SegmentDisplay.js -o dist/segment-display.min.js --compress --mangle --comments false",
+    "build:css": "cleancss -o dist/segment-display.min.css src/segment-display.css",
+    "prepublishOnly": "npm run build"
+  },
+  "keywords": [
+    "7-segment",
+    "segment-display",
+    "led-display",
+    "digital-display",
+    "character-display",
+    "scrolling-text",
+    "retro-display",
+    "seven-segment",
+    "display",
+    "led",
+    "marquee"
+  ],
+  "author": "Your Name <your.email@example.com>",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/yourusername/seven-segment.git"
+  },
+  "bugs": {
+    "url": "https://github.com/yourusername/seven-segment/issues"
+  },
+  "homepage": "https://github.com/yourusername/seven-segment#readme",
+  "devDependencies": {
+    "clean-css-cli": "^5.6.2",
+    "terser": "^5.19.0"
+  }
+}
