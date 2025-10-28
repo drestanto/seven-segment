@@ -1,10 +1,10 @@
 {
-  "name": "segment-display",
+  "name": "fun-7-segment",
   "version": "1.0.0",
   "description": "A modern 7-segment display library with multi-color segments and full character mapping",
-  "main": "dist/segment-display.min.js",
+  "main": "dist/fun-7-segment.min.js",
   "module": "src/SegmentDisplay.js",
-  "style": "dist/segment-display.min.css",
+  "style": "dist/fun-7-segment.min.css",
   "types": "dist/SegmentDisplay.d.ts",
   "files": [
     "dist/",
@@ -14,8 +14,8 @@
   ],
   "scripts": {
     "build": "npm run build:js && npm run build:css",
-    "build:js": "terser src/SegmentDisplay.js -o dist/segment-display.min.js --compress --mangle --comments false",
-    "build:css": "cleancss -o dist/segment-display.min.css src/segment-display.css",
+    "build:js": "terser src/SegmentDisplay.js -o dist/fun-7-segment.min.js --compress --mangle --comments false",
+    "build:css": "cleancss -o dist/fun-7-segment.min.css src/segment-display.css",
     "prepublishOnly": "npm run build"
   },
   "keywords": [
@@ -31,16 +31,16 @@
     "led",
     "marquee"
   ],
-  "author": "Your Name <your.email@example.com>",
+  "author": "Drestanto Muhammad Dyasputro <dyas@live.com>",
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "https://github.com/yourusername/seven-segment.git"
+    "url": "https://github.com/drestanto/seven-segment.git"
   },
   "bugs": {
-    "url": "https://github.com/yourusername/seven-segment/issues"
+    "url": "https://github.com/drestanto/seven-segment/issues"
   },
-  "homepage": "https://github.com/yourusername/seven-segment#readme",
+  "homepage": "https://github.com/drestanto/seven-segment#readme",
   "devDependencies": {
     "clean-css-cli": "^5.6.2",
     "terser": "^5.19.0"
