@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>7-Segment Display - Color & Text Scroller</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <header>
+            <h1>7-Segment Display</h1>
+            <p class="subtitle">Multi-color segments with character mapping & scrolling</p>
+            <button class="theme-toggle" id="themeToggle" aria-label="Toggle theme">
+                <span class="icon">🌙</span>
+            </button>
+        </header>
+
+        <!-- Display Container -->
+        <div class="display-wrapper">
+            <div id="segmentDisplay" class="segment-display"></div>
+        </div>
+
+        <!-- Controls -->
+        <div class="controls">
+            <div class="control-group">
+                <label for="textInput">Text to Display:</label>
+                <input type="text" id="textInput" placeholder="Enter text..." value="HELLO WORLD">
+            </div>
+
+            <div class="control-group">
+                <label for="digitCount">Number of Digits:</label>
+                <input type="number" id="digitCount" min="4" max="16" value="8">
+            </div>
+
+            <div class="control-group">
+                <label for="scrollSpeed">Scroll Speed:</label>
+                <input type="range" id="scrollSpeed" min="50" max="500" value="200">
+                <span id="speedValue">200ms</span>
+            </div>
+
+            <div class="control-group">
+                <label>
+                    <input type="checkbox" id="scrollToggle" checked>
+                    Enable Scrolling
+                </label>
+            </div>
+
+            <div class="control-group">
+                <label>
+                    <input type="checkbox" id="rainbowMode">
+                    Rainbow Mode (Novelty Color)
+                </label>
+            </div>
+
+            <div class="button-group">
+                <button id="updateDisplay" class="btn btn-primary">Update Display</button>
+                <button id="randomColors" class="btn btn-secondary">Randomize Colors</button>
+            </div>
+        </div>
+
+        <!-- Info Section -->
+        <div class="info-section">
+            <h3>✨ Features</h3>
+            <ul>
+                <li><strong>Novelty-1:</strong> Independent color per segment (impossible in real hardware)</li>
+                <li><strong>Novelty-2:</strong> Character mapping for all alphanumeric characters</li>
+                <li><strong>Smooth scrolling:</strong> Right-to-left marquee animation</li>
+                <li><strong>Responsive:</strong> Works on desktop and mobile</li>
+            </ul>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
