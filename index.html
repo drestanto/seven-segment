@@ -58,6 +58,23 @@
                 <button id="updateDisplay" class="btn btn-primary">Update Display</button>
                 <button id="randomColors" class="btn btn-secondary">Randomize Colors</button>
             </div>
+            
+            <button id="generateScript" class="btn btn-generate">📋 Generate Script</button>
+        </div>
+        
+        <!-- Generated Code Modal -->
+        <div id="codeModal" class="modal">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h2>Generated HTML Code</h2>
+                    <button class="modal-close" id="closeModal">&times;</button>
+                </div>
+                <div class="modal-body">
+                    <p class="modal-subtitle">Copy and paste this code to use the display in your project:</p>
+                    <pre id="generatedCode"></pre>
+                    <button id="copyCode" class="btn btn-primary">Copy to Clipboard</button>
+                </div>
+            </div>
         </div>
 
         <!-- Info Section -->

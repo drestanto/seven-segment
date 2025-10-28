@@ -311,6 +311,73 @@ function handleThemeToggle() {
 }
 
 // ========================================
+// Code Generation
+// ========================================
+
+function generateHTMLCode() {
+    const text = state.text;
+    const digitCount = state.digitCount;
+    const scrollSpeed = state.scrollSpeed;
+    const isScrolling = state.isScrolling;
+    
+    const code = `<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>7-Segment Display</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/fun-7-segment@1.1.0/dist/fun-7-segment.min.css">
+</head>
+<body>
+    <div id="display"></div>
+
+    <script src="https://cdn.jsdelivr.net/npm/fun-7-segment@1.1.0/dist/fun-7-segment.min.js"><\/script>
+    <script>
+        const display = new SegmentDisplay({
+            container: '#display',
+            digits: ${digitCount},
+            text: '${text}',
+            scrolling: ${isScrolling},
+            scrollSpeed: ${scrollSpeed}
+        });
+    <\/script>
+</body>
+</html>`;
+    
+    return code;
+}
+
+function handleGenerateScript() {
+    const code = generateHTMLCode();
+    const modal = document.getElementById('codeModal');
+    const codeElement = document.getElementById('generatedCode');
+    
+    codeElement.textContent = code;
+    modal.classList.add('active');
+}
+
+function handleCloseModal() {
+    const modal = document.getElementById('codeModal');
+    modal.classList.remove('active');
+}
+
+function handleCopyCode() {
+    const codeElement = document.getElementById('generatedCode');
+    const code = codeElement.textContent;
+    
+    navigator.clipboard.writeText(code).then(() => {
+        const button = document.getElementById('copyCode');
+        const originalText = button.textContent;
+        button.textContent = '✓ Copied!';
+        setTimeout(() => {
+            button.textContent = originalText;
+        }, 2000);
+    }).catch(err => {
+        alert('Failed to copy code');
+    });
+}
+
+// ========================================
 // Initialization
 // ========================================
 
@@ -327,6 +394,16 @@ function init() {
     document.getElementById('rainbowMode').addEventListener('change', handleRainbowMode);
     document.getElementById('scrollSpeed').addEventListener('input', handleScrollSpeed);
     document.getElementById('themeToggle').addEventListener('click', handleThemeToggle);
+    document.getElementById('generateScript').addEventListener('click', handleGenerateScript);
+    document.getElementById('closeModal').addEventListener('click', handleCloseModal);
+    document.getElementById('copyCode').addEventListener('click', handleCopyCode);
+    
+    // Close modal when clicking outside
+    document.getElementById('codeModal').addEventListener('click', (e) => {
+        if (e.target.id === 'codeModal') {
+            handleCloseModal();
+        }
+    });
     
     // Allow Enter key to update display
     document.getElementById('textInput').addEventListener('keypress', (e) => {
