@@ -7,8 +7,10 @@
 [![GitHub stars](https://img.shields.io/github/stars/drestanto/seven-segment.svg?style=social)](https://github.com/drestanto/seven-segment)
 
 <p align="center">
-  <img src="https://drestanto.github.io/seven-segment/preview.png" alt="7-Segment Display Demo" width="600">
+  <img src="./preview.png" alt="7-Segment Display Demo" width="600">
 </p>
+
+**Live Demo:** [https://drestanto.github.io/seven-segment/](https://drestanto.github.io/seven-segment/)
 
 ## 🚀 Quick Start
 
