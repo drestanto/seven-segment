@@ -10,10 +10,10 @@ A modern, interactive web-based 7-segment display implementation featuring indep
 
 This project implements a fully functional 7-segment display system in pure HTML, CSS, and JavaScript with two key innovations that go beyond traditional hardware displays:
 
-### **Novelty-1: Independent Segment Coloring**
+### **Fun Coloring: Independent Segment Coloring**
 Unlike physical 7-segment displays where all segments share the same color (due to hardware constraints), this implementation allows each of the 7 segments to have its own independent color. This creates visually striking effects impossible in real hardware.
 
-### **Novelty-2: Comprehensive Character Mapping**
+### **Char to 7-Segment: Comprehensive Character Mapping**
 While traditional 7-segment displays are limited to numbers and a few letters, this implementation includes mapping for the entire alphanumeric character set plus special symbols. Characters are approximated to fit the 7-segment constraint while remaining recognizable.
 
 ### Core Features
@@ -175,9 +175,9 @@ All interactive elements have dedicated handlers:
 
 ---
 
-## 🌈 Novelty & Design Decisions
+## 🌈 Key Features & Design Decisions
 
-### Novelty-1: Per-Segment Color Independence
+### Fun Coloring: Per-Segment Color Independence
 
 **Why It's Impossible in Hardware:**
 Physical 7-segment displays use a common anode/cathode for all segments. Changing the current changes the brightness uniformly, not individual colors.
@@ -194,7 +194,7 @@ seg.style.boxShadow = `0 0 10px ${color}, 0 0 20px ${color}`;
 - Color-coded data visualization (e.g., temperature: blue=cold, red=hot)
 - Aesthetic customization for branding
 
-### Novelty-2: Full Alphanumeric Character Mapping
+### Char to 7-Segment: Full Alphanumeric Character Mapping
 
 **Challenge:**
 7-segment displays were designed for numbers (0-9). Letters require creative approximations.
