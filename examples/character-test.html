@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Character Test - fun-7-segment</title>
+    <link rel="stylesheet" href="../src/segment-display.css">
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #0a0e27;
+            color: #e0e6ff;
+            padding: 40px;
+        }
+        
+        .test-section {
+            background: #151b3b;
+            border-radius: 15px;
+            padding: 30px;
+            margin-bottom: 30px;
+        }
+        
+        h1, h2 {
+            margin-bottom: 20px;
+        }
+        
+        h2 {
+            color: #4a90e2;
+            font-size: 1.2rem;
+            margin-top: 0;
+        }
+        
+        .controls {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            margin-top: 20px;
+        }
+        
+        button {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 8px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            cursor: pointer;
+            background: #4a90e2;
+            color: white;
+            transition: transform 0.2s;
+        }
+        
+        button:hover {
+            transform: translateY(-2px);
+        }
+        
+        .char-info {
+            color: #8b93b8;
+            font-size: 0.9rem;
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+    <h1>🎨 Character Mapping Test - fun-7-segment</h1>
+    
+    <div class="test-section">
+        <h2>Numbers (0-9)</h2>
+        <div id="numbers"></div>
+        <div class="char-info">Standard 7-segment number display</div>
+    </div>
+    
+    <div class="test-section">
+        <h2>Uppercase Letters (A-Z)</h2>
+        <div id="uppercase"></div>
+        <div class="char-info">Capital letters with approximations</div>
+    </div>
+    
+    <div class="test-section">
+        <h2>Lowercase Letters (a-z) ✨ NEW!</h2>
+        <div id="lowercase"></div>
+        <div class="char-info">Lowercase letters - fun approximations!</div>
+    </div>
+    
+    <div class="test-section">
+        <h2>Math Symbols ✨ NEW!</h2>
+        <div id="math"></div>
+        <div class="char-info">+ - / \ < > ^ | ~ @ # $ % &</div>
+    </div>
+    
+    <div class="test-section">
+        <h2>Punctuation ✨ UPDATED!</h2>
+        <div id="punctuation"></div>
+        <div class="char-info">. , : ; ! ? " ' ( ) [ ] { }</div>
+    </div>
+    
+    <div class="test-section">
+        <h2>Fun Characters ✨ NEW!</h2>
+        <div id="fun"></div>
+        <div class="char-info">Hearts, arrows, and emojis!</div>
+    </div>
+    
+    <div class="test-section">
+        <h2>Interactive Demo</h2>
+        <div id="demo"></div>
+        <div class="controls">
+            <button onclick="demo.setText('0123456789')">Numbers</button>
+            <button onclick="demo.setText('ABCDEFGHIJKLMNOPQRSTUVWXYZ')">Uppercase</button>
+            <button onclick="demo.setText('abcdefghijklmnopqrstuvwxyz')">Lowercase</button>
+            <button onclick="demo.setText('Hello World!')">Hello World!</button>
+            <button onclick="demo.setText('1+1=2')">Math: 1+1=2</button>
+            <button onclick="demo.setText('test@example.com')">Email</button>
+            <button onclick="demo.setText('←↑→↓')">Arrows</button>
+            <button onclick="demo.setText('I ♥ Code!')">I ♥ Code!</button>
+            <button onclick="demo.setRainbowMode(true)">🌈 Rainbow</button>
+            <button onclick="demo.setRainbowMode(false)">🎨 Normal</button>
+        </div>
+    </div>
+
+    <script src="../src/SegmentDisplay.js"></script>
+    <script>
+        // Numbers
+        const numbers = new SegmentDisplay('#numbers', {
+            text: '0123456789',
+            digitCount: 10,
+            scrolling: false,
+            color: '#00ff88'
+        });
+
+        // Uppercase
+        const uppercase = new SegmentDisplay('#uppercase', {
+            text: 'ABCDEFGHIJKLMNOPQRSTUVWXYZ',
+            digitCount: 16,
+            scrolling: true,
+            scrollSpeed: 150,
+            color: '#00ff88'
+        });
+
+        // Lowercase
+        const lowercase = new SegmentDisplay('#lowercase', {
+            text: 'abcdefghijklmnopqrstuvwxyz',
+            digitCount: 16,
+            scrolling: true,
+            scrollSpeed: 150,
+            color: '#ffaa00'
+        });
+
+        // Math symbols
+        const math = new SegmentDisplay('#math', {
+            text: '+ - / \\ < > ^ | ~ @ # $ % &',
+            digitCount: 16,
+            scrolling: true,
+            scrollSpeed: 200,
+            color: '#ff00ff'
+        });
+
+        // Punctuation
+        const punctuation = new SegmentDisplay('#punctuation', {
+            text: '. , : ; ! ? " \' ( ) [ ] { } = _ - *',
+            digitCount: 16,
+            scrolling: true,
+            scrollSpeed: 200,
+            color: '#00ffff'
+        });
+
+        // Fun characters
+        const fun = new SegmentDisplay('#fun', {
+            text: 'I ♥ Code! → ← ↑ ↓ ☺',
+            digitCount: 16,
+            scrolling: true,
+            scrollSpeed: 200,
+            rainbowMode: true
+        });
+
+        // Interactive demo
+        const demo = new SegmentDisplay('#demo', {
+            text: 'Try the buttons below!',
+            digitCount: 16,
+            scrolling: true,
+            scrollSpeed: 150,
+            color: '#4a90e2'
+        });
+    </script>
+</body>
+</html>

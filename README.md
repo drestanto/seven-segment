@@ -236,16 +236,30 @@ Real 7-segment displays share a common anode/cathode, making per-segment colorin
 ### 📝 Char to 7-Segment (Novelty #2)
 Display **any alphanumeric text**, not just numbers!
 
-Supports 36+ characters including:
+Supports **100+ characters** including:
 - **Numbers:** 0-9
-- **Letters:** A-Z (with creative approximations)
-- **Symbols:** - _ = ° " ' [ ] ( ) * ! ? . ,
+- **Uppercase Letters:** A-Z
+- **Lowercase Letters:** a-z ✨ (fun approximations!)
+- **Math Symbols:** + - / \ < > ^ | ~ @ # $ % &
+- **Punctuation:** . , : ; ! ? " ' ( ) [ ] { } = _ - *
+- **Fun Extras:** ♥ ☺ → ← ↑ ↓ (hearts, arrows, emojis!)
 
 Characters are intelligently mapped to 7-segment patterns:
 ```
 'A' → segments a,b,c,e,f,g
-'B' → segments c,d,e,f,g (lowercase b)
+'b' → segments c,d,e,f,g (lowercase)
+'+' → segments b,f,g (plus sign)
+'♥' → segments b,c,d,f,g (heart!)
 '8' → all segments (fallback for unknown)
+```
+
+**Try it:**
+```javascript
+display.setText('Hello World!');
+display.setText('1+1=2');
+display.setText('test@example.com');
+display.setText('I ♥ Code!');
+display.setText('←↑→↓');
 ```
 
 ### 📜 Smooth Scrolling

@@ -20,7 +20,7 @@ class SegmentDisplay {
         '8': ['a', 'b', 'c', 'd', 'e', 'f', 'g'],
         '9': ['a', 'b', 'c', 'd', 'f', 'g'],
         
-        // Letters
+        // Uppercase Letters
         'A': ['a', 'b', 'c', 'e', 'f', 'g'],
         'B': ['c', 'd', 'e', 'f', 'g'],
         'C': ['a', 'd', 'e', 'f'],
@@ -48,38 +48,82 @@ class SegmentDisplay {
         'Y': ['b', 'c', 'd', 'f', 'g'],
         'Z': ['a', 'b', 'd', 'e'],
         
-        // Special characters
+        // Lowercase Letters (fun approximations!)
+        'a': ['a', 'b', 'c', 'd', 'e', 'g'],
+        'b': ['c', 'd', 'e', 'f', 'g'],
+        'c': ['d', 'e', 'g'],
+        'd': ['b', 'c', 'd', 'e', 'g'],
+        'e': ['a', 'b', 'd', 'e', 'f', 'g'],
+        'f': ['a', 'e', 'f', 'g'],
+        'g': ['a', 'b', 'c', 'd', 'f', 'g'],
+        'h': ['c', 'e', 'f', 'g'],
+        'i': ['c'],
+        'j': ['b', 'c', 'd'],
+        'k': ['b', 'c', 'e', 'f', 'g'],
+        'l': ['e', 'f'],
+        'm': ['a', 'c', 'e', 'g'],
+        'n': ['c', 'e', 'g'],
+        'o': ['c', 'd', 'e', 'g'],
+        'p': ['a', 'b', 'e', 'f', 'g'],
+        'q': ['a', 'b', 'c', 'f', 'g'],
+        'r': ['e', 'g'],
+        's': ['a', 'c', 'd', 'f', 'g'],
+        't': ['d', 'e', 'f', 'g'],
+        'u': ['c', 'd', 'e'],
+        'v': ['c', 'd', 'e'],
+        'w': ['b', 'd', 'f'],
+        'x': ['b', 'c', 'e', 'f', 'g'],
+        'y': ['b', 'c', 'd', 'f', 'g'],
+        'z': ['a', 'b', 'd', 'e', 'g'],
+        
+        // Math & Common Symbols
+        '+': ['b', 'f', 'g'],
+        '/': ['b', 'e', 'g'],
+        '\\': ['c', 'f', 'g'],
+        '<': ['e', 'f'],
+        '>': ['b', 'c'],
+        '^': ['a', 'b', 'f'],
+        '|': ['b', 'c', 'e', 'f'],
+        '~': ['a', 'g'],
+        '`': ['f'],
+        '@': ['a', 'b', 'c', 'd', 'e', 'f'],
+        '#': ['a', 'b', 'c', 'd', 'e', 'f', 'g'],
+        '$': ['a', 'c', 'd', 'f', 'g'],
+        '%': ['a', 'c', 'f'],
+        '&': ['a', 'c', 'd', 'e', 'f', 'g'],
+        
+        // Brackets & Punctuation
         ' ': [],
         '-': ['g'],
         '_': ['d'],
         '=': ['d', 'g'],
         '°': ['a', 'b', 'f', 'g'],
         '"': ['b', 'f'],
-        '\'': ['f'],
+        "'": ['f'],
         '[': ['a', 'd', 'e', 'f'],
         ']': ['a', 'b', 'c', 'd'],
+        '{': ['a', 'd', 'e', 'f'],
+        '}': ['a', 'b', 'c', 'd'],
         '(': ['a', 'd', 'e', 'f'],
         ')': ['a', 'b', 'c', 'd'],
         '*': ['a', 'b', 'c', 'd', 'e', 'f', 'g'],
         '!': ['b', 'c'],
         '?': ['a', 'b', 'e', 'g'],
-        '.': [],
-        ',': [],
+        '.': ['c'],
+        ',': ['c'],
+        ':': ['b', 'e'],
+        ';': ['b', 'c'],
+        
+        // Fun extras
+        '♥': ['b', 'c', 'd', 'f', 'g'],
+        '☺': ['a', 'b', 'c', 'd', 'e', 'f'],
+        '→': ['a', 'b', 'c', 'g'],
+        '←': ['a', 'd', 'e', 'f', 'g'],
+        '↑': ['a', 'b', 'f'],
+        '↓': ['c', 'd', 'e'],
     };
 
-    /**
-     * Create a new SegmentDisplay instance
-     * @param {string|HTMLElement} container - Container element or selector
-     * @param {Object} options - Configuration options
-     * @param {string} options.text - Initial text to display
-     * @param {number} options.digitCount - Number of digits to display
-     * @param {number} options.scrollSpeed - Scroll speed in milliseconds
-     * @param {boolean} options.scrolling - Enable scrolling
-     * @param {boolean} options.rainbowMode - Enable rainbow color mode
-     * @param {string} options.color - Default segment color
-     */
     constructor(container, options = {}) {
-        // Parse container
         this.container = typeof container === 'string' 
             ? document.querySelector(container) 
             : container;
@@ -88,7 +132,6 @@ class SegmentDisplay {
             throw new Error('Container element not found');
         }
 
-        // Default options
         this.options = {
             text: options.text || 'HELLO',
             digitCount: options.digitCount || 8,
@@ -98,20 +141,14 @@ class SegmentDisplay {
             color: options.color || null,
         };
 
-        // Internal state
         this.scrollPosition = 0;
         this.scrollInterval = null;
         this.currentColors = [];
         this.digits = [];
 
-        // Initialize
         this._init();
     }
 
-    /**
-     * Initialize the display
-     * @private
-     */
     _init() {
         this.container.classList.add('segment-display');
         this._createDigits();
@@ -122,10 +159,6 @@ class SegmentDisplay {
         }
     }
 
-    /**
-     * Create digit elements
-     * @private
-     */
     _createDigits() {
         this.container.innerHTML = '';
         this.digits = [];
@@ -139,10 +172,6 @@ class SegmentDisplay {
         this.currentColors = Array(this.options.digitCount).fill(null).map(() => ({}));
     }
 
-    /**
-     * Create a single digit element
-     * @private
-     */
     _createDigit() {
         const digit = document.createElement('div');
         digit.className = 'digit';
@@ -157,37 +186,26 @@ class SegmentDisplay {
         return digit;
     }
 
-    /**
-     * Get segments for a character
-     * @private
-     */
     _getCharSegments(char) {
+        // Try exact match first (preserves lowercase)
+        if (SegmentDisplay.SEGMENT_MAP[char]) {
+            return SegmentDisplay.SEGMENT_MAP[char];
+        }
+        // Fallback to uppercase
         const upper = char.toUpperCase();
         return SegmentDisplay.SEGMENT_MAP[upper] || SegmentDisplay.SEGMENT_MAP['8'];
     }
 
-    /**
-     * Generate a random color
-     * @private
-     */
     _randomColor() {
         const hue = Math.floor(Math.random() * 360);
         return `hsl(${hue}, 80%, 60%)`;
     }
 
-    /**
-     * Generate rainbow color
-     * @private
-     */
     _rainbowColor(index, total) {
         const hue = (index / total) * 360;
         return `hsl(${hue}, 80%, 60%)`;
     }
 
-    /**
-     * Render a character on a digit
-     * @private
-     */
     _renderCharacter(digitElement, char, digitIndex) {
         const segments = this._getCharSegments(char);
         const segmentElements = digitElement.querySelectorAll('.segment');
@@ -221,10 +239,6 @@ class SegmentDisplay {
         });
     }
 
-    /**
-     * Prepare text for display
-     * @private
-     */
     _prepareDisplayText() {
         if (!this.options.scrolling) {
             const padded = this.options.text.padEnd(this.options.digitCount, ' ');
@@ -243,9 +257,6 @@ class SegmentDisplay {
         return result;
     }
 
-    /**
-     * Render the display
-     */
     render() {
         const displayText = this._prepareDisplayText();
         
@@ -255,20 +266,12 @@ class SegmentDisplay {
         });
     }
 
-    /**
-     * Set display text
-     * @param {string} text - Text to display
-     */
     setText(text) {
         this.options.text = text;
         this.scrollPosition = 0;
         this.render();
     }
 
-    /**
-     * Set number of digits
-     * @param {number} count - Number of digits
-     */
     setDigitCount(count) {
         this.options.digitCount = count;
         this._createDigits();
@@ -279,9 +282,6 @@ class SegmentDisplay {
         }
     }
 
-    /**
-     * Start scrolling animation
-     */
     startScrolling() {
         this.stopScrolling();
         this.options.scrolling = true;
@@ -292,9 +292,6 @@ class SegmentDisplay {
         }, this.options.scrollSpeed);
     }
 
-    /**
-     * Stop scrolling animation
-     */
     stopScrolling() {
         if (this.scrollInterval) {
             clearInterval(this.scrollInterval);
@@ -303,10 +300,6 @@ class SegmentDisplay {
         this.options.scrolling = false;
     }
 
-    /**
-     * Set scroll speed
-     * @param {number} speed - Speed in milliseconds
-     */
     setScrollSpeed(speed) {
         this.options.scrollSpeed = speed;
         
@@ -315,27 +308,16 @@ class SegmentDisplay {
         }
     }
 
-    /**
-     * Enable/disable rainbow mode
-     * @param {boolean} enabled - Rainbow mode state
-     */
     setRainbowMode(enabled) {
         this.options.rainbowMode = enabled;
         this.render();
     }
 
-    /**
-     * Set default segment color
-     * @param {string} color - CSS color value
-     */
     setColor(color) {
         this.options.color = color;
         this.render();
     }
 
-    /**
-     * Randomize segment colors
-     */
     randomizeColors() {
         this.currentColors = Array(this.options.digitCount).fill(null).map(() => {
             return {
@@ -353,11 +335,6 @@ class SegmentDisplay {
         this.render();
     }
 
-    /**
-     * Set custom colors for a specific digit
-     * @param {number} digitIndex - Index of the digit
-     * @param {Object} colors - Object with segment colors {a: 'color', b: 'color', ...}
-     */
     setDigitColors(digitIndex, colors) {
         if (digitIndex >= 0 && digitIndex < this.options.digitCount) {
             this.currentColors[digitIndex] = { ...colors };
@@ -365,17 +342,11 @@ class SegmentDisplay {
         }
     }
 
-    /**
-     * Clear all custom colors
-     */
     clearColors() {
         this.currentColors = Array(this.options.digitCount).fill(null).map(() => ({}));
         this.render();
     }
 
-    /**
-     * Destroy the display and cleanup
-     */
     destroy() {
         this.stopScrolling();
         this.container.innerHTML = '';
