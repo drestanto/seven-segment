@@ -1,572 +1,451 @@
-# 7-Segment Display with Multi-Color Segments & Character Mapping
+# fun-7-segment ✨
 
-A modern, interactive web-based 7-segment display implementation featuring independent segment coloring, comprehensive character mapping, and smooth scrolling text animation.
+> A modern 7-segment display library with **Fun Coloring** (multi-color segments) and **Char to 7-Segment** (full character mapping)
 
-![7-Segment Display Demo](https://img.shields.io/badge/status-active-success.svg)
-![Version](https://img.shields.io/badge/version-1.0.0-blue.svg)
-![License](https://img.shields.io/badge/license-MIT-green.svg)
+[![npm version](https://img.shields.io/npm/v/fun-7-segment.svg)](https://www.npmjs.com/package/fun-7-segment)
+[![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](https://opensource.org/licenses/MIT)
+[![GitHub stars](https://img.shields.io/github/stars/drestanto/seven-segment.svg?style=social)](https://github.com/drestanto/seven-segment)
 
-## 🎯 Project Overview
+<p align="center">
+  <img src="https://drestanto.github.io/seven-segment/preview.png" alt="7-Segment Display Demo" width="600">
+</p>
 
-This project implements a fully functional 7-segment display system in pure HTML, CSS, and JavaScript with two key innovations that go beyond traditional hardware displays:
+## 🚀 Quick Start
 
-### **Fun Coloring: Independent Segment Coloring**
-Unlike physical 7-segment displays where all segments share the same color (due to hardware constraints), this implementation allows each of the 7 segments to have its own independent color. This creates visually striking effects impossible in real hardware.
+### Installation
 
-### **Char to 7-Segment: Comprehensive Character Mapping**
-While traditional 7-segment displays are limited to numbers and a few letters, this implementation includes mapping for the entire alphanumeric character set plus special symbols. Characters are approximated to fit the 7-segment constraint while remaining recognizable.
-
-### Core Features
-- ✨ **Custom 7-segment rendering** from scratch (no libraries)
-- 🎨 **Rainbow mode** with gradient color effects
-- 🎲 **Random color generation** per segment
-- 📜 **Smooth scrolling text** (marquee-style, right-to-left)
-- 🌓 **Dark/Light theme** toggle
-- 📱 **Fully responsive** design (desktop to mobile)
-- ⚡ **Real-time controls** for speed, text, and digit count
-- 🎯 **Clean, modular code** with inline documentation
-
----
-
-## 🧱 Implementation Details
-
-### HTML Structure (`index.html`)
-
-The HTML provides a semantic, accessible structure:
-
-```
-container
-├── header (title, subtitle, theme toggle)
-├── display-wrapper
-│   └── segment-display (dynamically populated with digits)
-├── controls
-│   ├── text input
-│   ├── digit count selector
-│   ├── scroll speed slider
-│   ├── scroll/rainbow toggles
-│   └── action buttons
-└── info-section (feature descriptions)
-```
-
-**Key Design Decisions:**
-- Semantic HTML5 elements for accessibility
-- ARIA labels on interactive elements
-- Progressive enhancement approach (works even with JS disabled for static view)
-
-### CSS Architecture (`style.css`)
-
-**CSS Variables for Theming:**
-- Uses custom properties (`--bg-primary`, `--segment-on`, etc.) for easy theme switching
-- Light and dark themes defined in `:root` and `[data-theme="light"]`
-- Smooth transitions between theme changes
-
-**7-Segment Geometry:**
-```css
-/* Horizontal segments use hexagonal clip-path */
-.segment-a, .segment-d, .segment-g {
-    clip-path: polygon(10% 0%, 90% 0%, 100% 50%, 90% 100%, 10% 100%, 0% 50%);
-}
-
-/* Vertical segments use diamond-like clip-path */
-.segment-b, .segment-c, .segment-e, .segment-f {
-    clip-path: polygon(0% 10%, 50% 0%, 100% 10%, 100% 90%, 50% 100%, 0% 90%);
-}
-```
-
-**Positioning System:**
-- Absolute positioning for all 7 segments within each digit container
-- Segments labeled a-g following standard 7-segment nomenclature:
-  ```
-       aaa
-      f   b
-       ggg
-      e   c
-       ddd
-  ```
-
-**Glow Effects:**
-```css
-.segment.on {
-    box-shadow: 0 0 10px var(--glow), 0 0 20px var(--glow);
-}
-```
-
-**Responsive Breakpoints:**
-- Desktop: 60px × 100px digits
-- Tablet (768px): 45px × 75px digits
-- Mobile (480px): 35px × 60px digits
-
-### JavaScript Logic (`script.js`)
-
-#### 1. Character Mapping System
-
-**SEGMENT_MAP Object:**
-```javascript
-const SEGMENT_MAP = {
-    '0': ['a', 'b', 'c', 'd', 'e', 'f'],
-    'A': ['a', 'b', 'c', 'e', 'f', 'g'],
-    // ... 36 characters mapped
-};
-```
-
-**Mapping Strategy:**
-- Numbers: Standard 7-segment patterns
-- Letters: Best-fit approximations (e.g., 'B' uses lowercase 'b' pattern)
-- Special chars: Creative use of segments (e.g., '-' uses middle segment only)
-- Unknown chars: Default to '8' (all segments on)
-
-#### 2. State Management
-
-Centralized state object tracks all display parameters:
-```javascript
-let state = {
-    text: 'HELLO WORLD',
-    digitCount: 8,
-    scrollSpeed: 200,
-    isScrolling: true,
-    rainbowMode: false,
-    scrollPosition: 0,
-    scrollInterval: null,
-    currentColors: []
-};
-```
-
-#### 3. Rendering Pipeline
-
-**Flow:**
-1. `updateDisplay()` → Entry point for all visual updates
-2. `prepareDisplayText()` → Handles scrolling logic and text positioning
-3. `renderCharacter()` → Maps character to segments and applies colors
-4. DOM manipulation → Updates segment classes and inline styles
-
-**Color Application Logic:**
-```javascript
-if (state.rainbowMode) {
-    color = rainbowColor(digitIndex * 7 + idx, state.digitCount * 7);
-} else if (state.currentColors[digitIndex][segmentName]) {
-    color = state.currentColors[digitIndex][segmentName];
-} else {
-    color = CSS_VARIABLE_DEFAULT;
-}
-```
-
-#### 4. Scrolling Mechanism
-
-**Circular Buffer Approach:**
-```javascript
-const paddedText = '   ' + state.text + '   '; // Add spacing
-const textLength = paddedText.length;
-
-for (let i = 0; i < state.digitCount; i++) {
-    const charIndex = (state.scrollPosition + i) % textLength;
-    result += paddedText[charIndex];
-}
-```
-
-Uses `setInterval` to increment `scrollPosition` and create smooth animation.
-
-#### 5. Event Handling
-
-All interactive elements have dedicated handlers:
-- **Update Display:** Reinitializes display if digit count changes
-- **Random Colors:** Generates new color palette for all segments
-- **Theme Toggle:** Switches CSS variables and icon
-- **Scroll Controls:** Start/stop interval and adjust speed
-
----
-
-## 🌈 Key Features & Design Decisions
-
-### Fun Coloring: Per-Segment Color Independence
-
-**Why It's Impossible in Hardware:**
-Physical 7-segment displays use a common anode/cathode for all segments. Changing the current changes the brightness uniformly, not individual colors.
-
-**Implementation:**
-Each segment is an independent DOM element with its own inline `background` and `box-shadow` styles:
-```javascript
-seg.style.background = color;
-seg.style.boxShadow = `0 0 10px ${color}, 0 0 20px ${color}`;
-```
-
-**Use Cases:**
-- Rainbow gradients across display
-- Color-coded data visualization (e.g., temperature: blue=cold, red=hot)
-- Aesthetic customization for branding
-
-### Char to 7-Segment: Full Alphanumeric Character Mapping
-
-**Challenge:**
-7-segment displays were designed for numbers (0-9). Letters require creative approximations.
-
-**Mapping Philosophy:**
-1. **Preserve recognizability** over perfect representation
-2. **Use lowercase patterns** when uppercase is ambiguous (e.g., 'b' vs 'B')
-3. **Accept approximations** for impossible letters (e.g., 'M', 'W')
-4. **Graceful fallback** to full display ('8' pattern) for unknown chars
-
-**Example Approximations:**
-- `M` → top + middle-left + middle-right segments (looks like inverted 'Π')
-- `X` → uses segments b, c, e, f, g (cross-like pattern)
-- `?` → top + top-right + middle + bottom-left segments
-
-**Benefits:**
-- Display arbitrary text messages
-- Support multiple languages (with limitations)
-- Enhance creative projects (LED signs, retro displays)
-
----
-
-## 🔮 Future Work Ideas
-
-### 1. Hardware Integration
-- **ESP32/Arduino Interface:** Bridge web display to physical 7-segment LED arrays via WebSerial API
-- **MQTT Protocol:** Real-time sync between web UI and IoT devices
-- **PWM Color Control:** Map RGB values to hardware PWM signals
-
-### 2. Advanced Visual Effects
-- **Fade Transitions:** Smooth segment on/off instead of instant switching
-- **Breathing Effect:** Pulsing brightness for inactive displays
-- **Persistence of Vision:** Simulate phosphor decay of vintage displays
-- **Segment Failure Simulation:** Random glitches for retro aesthetic
-
-### 3. Interaction Enhancements
-- **Click-to-Edit Segments:** Direct manipulation of individual segments
-- **Drag-and-Drop Colors:** Color picker for segment customization
-- **Preset Palettes:** Save/load color schemes
-- **Animation Timeline:** Record and replay segment patterns
-
-### 4. Extended Character Support
-- **Unicode Approximations:** Support for accented characters, symbols
-- **Custom Character Editor:** Visual tool to design segment patterns
-- **Font Import:** Load custom mappings from JSON files
-- **Math Symbols:** Enhanced support for +, −, ×, ÷, =, etc.
-
-### 5. Performance Optimization
-- **Canvas Rendering:** Replace DOM elements with 2D canvas for 1000+ digits
-- **Web Workers:** Offload scrolling calculations to background thread
-- **CSS Transforms:** Use `transform: translate3d()` for GPU acceleration
-- **Virtual Scrolling:** Render only visible digits for infinite text
-
-### 6. Developer Tools
-- **React/Vue Components:** Framework wrappers for easy integration
-- **TypeScript Definitions:** Type-safe API for library users
-- **Build Pipeline:** Minified, tree-shakeable npm package
-- **Storybook Documentation:** Interactive component explorer
-
----
-
-## 📦 Publishing Instructions
-
-### 1. GitHub Repository Setup
-
-#### Create Repository
+**Via NPM:**
 ```bash
-# Initialize git (if not already done)
-git init
-
-# Create .gitignore
-echo "node_modules/
-.DS_Store
-*.log" > .gitignore
-
-# Initial commit
-git add .
-git commit -m "Initial commit: 7-segment display with multi-color segments"
-
-# Create GitHub repo (using GitHub CLI)
-gh repo create 7-segment-display --public --source=. --remote=origin --push
+npm install fun-7-segment
 ```
 
-#### Create README.md
-Use this documentation as your `README.md` (this file is already formatted for GitHub).
-
-#### Add License
-```bash
-# MIT License example
-curl https://raw.githubusercontent.com/licenses/license-templates/master/templates/mit.txt > LICENSE
-# Edit LICENSE to add your name and year
+**Via CDN:**
+```html
+<link rel="stylesheet" href="https://unpkg.com/fun-7-segment/dist/fun-7-segment.min.css">
+<script src="https://unpkg.com/fun-7-segment/dist/fun-7-segment.min.js"></script>
 ```
 
-#### Create GitHub Pages Branch
-```bash
-# Create gh-pages branch
-git checkout -b gh-pages
-git push origin gh-pages
-git checkout main
+### Basic Usage
 
-# Enable GitHub Pages in Settings > Pages > Source: gh-pages branch
+```html
+<!DOCTYPE html>
+<html>
+<head>
+    <link rel="stylesheet" href="https://unpkg.com/fun-7-segment/dist/fun-7-segment.min.css">
+</head>
+<body>
+    <div id="display"></div>
+
+    <script src="https://unpkg.com/fun-7-segment/dist/fun-7-segment.min.js"></script>
+    <script>
+        const display = new SegmentDisplay('#display', {
+            text: 'HELLO WORLD',
+            digitCount: 8,
+            scrolling: true,
+            scrollSpeed: 200
+        });
+    </script>
+</body>
+</html>
 ```
 
-Your live demo will be at: `https://yourusername.github.io/7-segment-display/`
+### ES6 Module
 
----
+```javascript
+import SegmentDisplay from 'fun-7-segment';
+import 'fun-7-segment/dist/fun-7-segment.min.css';
 
-### 2. CodePen Demo
-
-#### Create New Pen
-1. Go to [codepen.io/pen/](https://codepen.io/pen/)
-2. Click "New Pen"
-
-#### Copy Code
-- **HTML:** Paste contents of `index.html` (body content only, exclude `<!DOCTYPE>`, `<html>`, `<head>`, etc.)
-- **CSS:** Paste entire `style.css`
-- **JS:** Paste entire `script.js`
-
-#### Settings
-- **Pen Title:** "7-Segment Display - Multi-Color & Scrolling"
-- **Pen Description:**
-  ```
-  Interactive 7-segment display with:
-  • Independent color per segment (hardware-impossible feature)
-  • Full alphanumeric character mapping
-  • Smooth scrolling text animation
-  • Dark/light theme toggle
-  • Responsive design
-  ```
-- **Tags:** `javascript`, `7-segment`, `led-display`, `animation`, `css`
-
-#### Save and Publish
-1. Click "Save" (Ctrl/Cmd + S)
-2. Click "Change View" → Select "Full Page" for best showcase
-3. Copy the Pen URL (e.g., `https://codepen.io/yourusername/pen/abc123`)
-
-#### Add to README
-In your GitHub `README.md`, add:
-```markdown
-## 🚀 Live Demo
-
-- **CodePen:** [Interactive Demo](https://codepen.io/yourusername/pen/abc123)
-- **GitHub Pages:** [Full Page View](https://yourusername.github.io/7-segment-display/)
-```
-
----
-
-### 3. NPM Package Publication
-
-#### Create package.json
-```json
-{
-  "name": "7-segment-display",
-  "version": "1.0.0",
-  "description": "Interactive 7-segment display with multi-color segments and character mapping",
-  "main": "dist/segment-display.min.js",
-  "module": "src/script.js",
-  "style": "dist/segment-display.min.css",
-  "files": [
-    "dist/",
-    "src/",
-    "index.html",
-    "README.md",
-    "LICENSE"
-  ],
-  "scripts": {
-    "build": "npm run build:js && npm run build:css",
-    "build:js": "terser src/script.js -o dist/segment-display.min.js --compress --mangle",
-    "build:css": "cleancss -o dist/segment-display.min.css src/style.css",
-    "prepublishOnly": "npm run build"
-  },
-  "keywords": [
-    "7-segment",
-    "led-display",
-    "digital-display",
-    "segment-display",
-    "character-display",
-    "scrolling-text",
-    "retro-display"
-  ],
-  "author": "Your Name <your.email@example.com>",
-  "license": "MIT",
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/yourusername/7-segment-display.git"
-  },
-  "bugs": {
-    "url": "https://github.com/yourusername/7-segment-display/issues"
-  },
-  "homepage": "https://github.com/yourusername/7-segment-display#readme",
-  "devDependencies": {
-    "clean-css-cli": "^5.6.2",
-    "terser": "^5.19.0"
-  }
-}
-```
-
-#### Project Structure
-```
-7-segment-display/
-├── src/
-│   ├── script.js
-│   └── style.css
-├── dist/              (generated by build)
-│   ├── segment-display.min.js
-│   └── segment-display.min.css
-├── index.html
-├── package.json
-├── README.md
-└── LICENSE
-```
-
-#### Build Process
-```bash
-# Install dev dependencies
-npm install
-
-# Build minified files
-npm run build
-
-# Test locally
-npm link
-cd ../test-project
-npm link 7-segment-display
-```
-
-#### Publish to NPM
-```bash
-# Login to npm (one-time setup)
-npm login
-
-# Publish package
-npm publish
-
-# For scoped packages (e.g., @yourname/7-segment-display)
-npm publish --access public
-```
-
-#### Usage Documentation
-Add to `README.md`:
-```markdown
-## 📦 Installation
-
-### NPM
-\`\`\`bash
-npm install 7-segment-display
-\`\`\`
-
-### CDN
-\`\`\`html
-<link rel="stylesheet" href="https://unpkg.com/7-segment-display@1.0.0/dist/segment-display.min.css">
-<script src="https://unpkg.com/7-segment-display@1.0.0/dist/segment-display.min.js"></script>
-\`\`\`
-
-### Usage
-\`\`\`html
-<div id="myDisplay"></div>
-
-<script>
-// Initialize display
-const display = new SegmentDisplay('#myDisplay', {
+const display = new SegmentDisplay('#display', {
     text: 'HELLO',
     digitCount: 5,
-    scrollSpeed: 200,
     rainbowMode: true
 });
-
-// Update text
-display.setText('WORLD');
-
-// Enable scrolling
-display.startScrolling();
-\`\`\`
 ```
-
-**Note:** Current implementation uses direct DOM manipulation. For npm package, consider wrapping in a class-based API for better modularity.
 
 ---
 
-### 4. Version Management
+## 📚 API Reference
 
-#### Semantic Versioning
-- `1.0.0` - Initial release
-- `1.1.0` - Add new features (e.g., custom color palettes)
-- `1.0.1` - Bug fixes
-- `2.0.0` - Breaking changes (e.g., API redesign)
+### Constructor
 
-#### Release Process
-```bash
-# Update version
-npm version patch  # 1.0.0 → 1.0.1
-npm version minor  # 1.0.1 → 1.1.0
-npm version major  # 1.1.0 → 2.0.0
-
-# Push tags
-git push --follow-tags
-
-# Publish
-npm publish
+```javascript
+new SegmentDisplay(container, options)
 ```
 
-#### GitHub Releases
-1. Go to GitHub repo → Releases → "Draft a new release"
-2. Tag version: `v1.0.0`
-3. Release title: `Release 1.0.0 - Initial Version`
-4. Description: Copy changelog from `CHANGELOG.md`
-5. Attach minified files: `segment-display.min.js`, `segment-display.min.css`
+**Parameters:**
+- `container` (string|HTMLElement) - CSS selector or DOM element
+- `options` (Object) - Configuration options
+
+**Options:**
+```javascript
+{
+    text: 'HELLO',          // Initial text to display
+    digitCount: 8,          // Number of digits (4-16)
+    scrollSpeed: 200,       // Scroll speed in milliseconds
+    scrolling: true,        // Enable scrolling animation
+    rainbowMode: false,     // Enable rainbow colors
+    color: '#00ff88'        // Default segment color (CSS color)
+}
+```
+
+### Methods
+
+#### Text Control
+```javascript
+display.setText('NEW TEXT');        // Update display text
+```
+
+#### Display Configuration
+```javascript
+display.setDigitCount(10);          // Change number of digits
+```
+
+#### Scrolling Control
+```javascript
+display.startScrolling();           // Start scrolling animation
+display.stopScrolling();            // Stop scrolling
+display.setScrollSpeed(150);        // Set speed in milliseconds
+```
+
+#### Color Control
+```javascript
+display.setRainbowMode(true);       // Enable rainbow mode
+display.setColor('#ff0000');        // Set default segment color
+display.randomizeColors();          // Randomize all segment colors
+
+// Set colors for specific digit (Fun Coloring!)
+display.setDigitColors(0, {
+    a: '#ff0000',  // top segment
+    b: '#00ff00',  // top-right segment
+    c: '#0000ff',  // bottom-right segment
+    d: '#ffff00',  // bottom segment
+    e: '#ff00ff',  // bottom-left segment
+    f: '#00ffff',  // top-left segment
+    g: '#ffffff'   // middle segment
+});
+
+display.clearColors();              // Clear all custom colors
+```
+
+#### Cleanup
+```javascript
+display.destroy();                  // Remove display and cleanup
+```
 
 ---
 
-## 🛠️ Development Setup
+## 🎯 Examples
 
-### Local Development
+### 1. Clock Display
+
+```javascript
+const clock = new SegmentDisplay('#clock', {
+    text: '00:00:00',
+    digitCount: 8,
+    scrolling: false
+});
+
+setInterval(() => {
+    const now = new Date();
+    const time = now.toTimeString().slice(0, 8);
+    clock.setText(time);
+}, 1000);
+```
+
+### 2. Scrolling Marquee
+
+```javascript
+const marquee = new SegmentDisplay('#marquee', {
+    text: 'WELCOME TO OUR STORE! SPECIAL OFFERS TODAY!',
+    digitCount: 16,
+    scrollSpeed: 150,
+    scrolling: true,
+    rainbowMode: true
+});
+```
+
+### 3. Counter
+
+```javascript
+let count = 0;
+const counter = new SegmentDisplay('#counter', {
+    text: '0000',
+    digitCount: 4,
+    scrolling: false,
+    color: '#00ff00'
+});
+
+setInterval(() => {
+    count++;
+    counter.setText(count.toString().padStart(4, '0'));
+}, 1000);
+```
+
+### 4. Temperature Display with Color
+
+```javascript
+const temp = new SegmentDisplay('#temperature', {
+    text: '72°F',
+    digitCount: 4,
+    scrolling: false
+});
+
+// Change color based on temperature
+function updateTemp(temperature) {
+    const color = temperature > 80 ? '#ff0000' : 
+                  temperature < 60 ? '#0000ff' : '#00ff00';
+    temp.setColor(color);
+    temp.setText(`${temperature}°F`);
+}
+```
+
+### 5. Fun Coloring - Per Segment Colors
+
+```javascript
+const funDisplay = new SegmentDisplay('#fun', {
+    text: '888',
+    digitCount: 3,
+    scrolling: false
+});
+
+// Create a rainbow effect on first digit
+funDisplay.setDigitColors(0, {
+    a: '#ff0000',
+    b: '#ff7f00',
+    c: '#ffff00',
+    d: '#00ff00',
+    e: '#0000ff',
+    f: '#4b0082',
+    g: '#9400d3'
+});
+```
+
+---
+
+## ✨ Features
+
+### 🎨 Fun Coloring (Novelty #1)
+Independent color control for each of the 7 segments - **impossible in real hardware!**
+
+Real 7-segment displays share a common anode/cathode, making per-segment coloring impossible. This library gives you full creative control:
+- Rainbow gradients across displays
+- Color-coded data visualization
+- Temperature indicators (blue→cold, red→hot)
+- Brand-specific color schemes
+
+### 📝 Char to 7-Segment (Novelty #2)
+Display **any alphanumeric text**, not just numbers!
+
+Supports 36+ characters including:
+- **Numbers:** 0-9
+- **Letters:** A-Z (with creative approximations)
+- **Symbols:** - _ = ° " ' [ ] ( ) * ! ? . ,
+
+Characters are intelligently mapped to 7-segment patterns:
+```
+'A' → segments a,b,c,e,f,g
+'B' → segments c,d,e,f,g (lowercase b)
+'8' → all segments (fallback for unknown)
+```
+
+### 📜 Smooth Scrolling
+Marquee-style animation with adjustable speed:
+- Right-to-left scrolling
+- Configurable speed (50-500ms)
+- Circular buffer for seamless looping
+- Start/stop control
+
+### 📱 Responsive Design
+Perfect display on all devices:
+- Desktop: 60×100px digits
+- Tablet: 45×75px digits  
+- Mobile: 35×60px digits
+
+---
+
+## 🎨 Theming
+
+Customize colors using CSS variables:
+
+```css
+:root {
+    --segment-on: #00ff88;           /* Active segment color */
+    --segment-off: rgba(255,255,255,0.05); /* Inactive segment */
+    --glow: rgba(0,255,136,0.6);     /* Glow effect */
+}
+```
+
+Or use the API:
+
+```javascript
+display.setColor('#ff00ff');         // All segments
+display.setRainbowMode(true);        // Rainbow gradient
+display.randomizeColors();           // Random per segment
+```
+
+---
+
+## 🔧 TypeScript Support
+
+Full TypeScript definitions included:
+
+```typescript
+import SegmentDisplay, { SegmentDisplayOptions } from 'fun-7-segment';
+
+const options: SegmentDisplayOptions = {
+    text: 'TYPESCRIPT',
+    digitCount: 10,
+    scrolling: true,
+    rainbowMode: false,
+    color: '#00ff88'
+};
+
+const display = new SegmentDisplay('#display', options);
+
+// Type-safe method calls
+display.setText('HELLO');
+display.setDigitCount(8);
+display.setRainbowMode(true);
+```
+
+---
+
+## 📊 Bundle Size
+
+Lightweight with zero dependencies:
+- **JavaScript:** ~8KB minified
+- **CSS:** ~2KB minified
+- **Total:** ~10KB
+
+---
+
+## 🌐 Browser Support
+
+Works on all modern browsers:
+- Chrome/Edge 90+
+- Firefox 88+
+- Safari 14+
+- Opera 76+
+
+---
+
+## 🎯 Use Cases
+
+- **Digital clocks** and timers
+- **Score displays** for games
+- **Temperature/weather** displays
+- **Stock tickers** and counters
+- **LED sign** simulators
+- **Retro-style** interfaces
+- **Data visualization** with color coding
+- **Marketing displays** with scrolling text
+
+---
+
+## 🚀 Live Demo
+
+- **GitHub Pages:** [https://drestanto.github.io/seven-segment/](https://drestanto.github.io/seven-segment/)
+- **CodePen:** [Coming soon]
+
+---
+
+## 🛠️ Development
+
+### Setup
+
 ```bash
-# Clone repository
-git clone https://github.com/yourusername/7-segment-display.git
-cd 7-segment-display
+git clone https://github.com/drestanto/seven-segment.git
+cd seven-segment
+npm install
+```
 
-# Open in browser
-# On macOS:
-open index.html
-# On Windows:
+### Build
+
+```bash
+npm run build
+```
+
+Creates minified files:
+- `dist/fun-7-segment.min.js`
+- `dist/fun-7-segment.min.css`
+
+### Local Testing
+
+```bash
+# Open demo page
 start index.html
-# On Linux:
-xdg-open index.html
 
-# Or use a local server (recommended)
-python -m http.server 8000
-# Then visit: http://localhost:8000
-```
-
-### Testing Across Devices
-```bash
-# Using ngrok for remote testing
-npx http-server -p 8000
-ngrok http 8000
-# Share the ngrok URL to test on mobile devices
+# Or use example
+start examples/simple.html
 ```
 
 ---
 
-## 📄 License
+## 🐛 Troubleshooting
 
-MIT License - feel free to use in personal and commercial projects.
+### CSS not loading
+Make sure to import the CSS:
+```javascript
+import 'fun-7-segment/dist/fun-7-segment.min.css';
+```
+
+### "Container not found" error
+Ensure DOM is ready:
+```javascript
+document.addEventListener('DOMContentLoaded', () => {
+    const display = new SegmentDisplay('#display', {...});
+});
+```
+
+### Display not updating
+Force re-render:
+```javascript
+display.setText('TEST');
+display.render();
+```
 
 ---
 
 ## 🤝 Contributing
 
 Contributions welcome! Please:
+
 1. Fork the repository
-2. Create a feature branch (`git checkout -b feature/amazing-feature`)
-3. Commit changes (`git commit -m 'Add amazing feature'`)
-4. Push to branch (`git push origin feature/amazing-feature`)
-5. Open a Pull Request
+2. Create feature branch: `git checkout -b feature/amazing-feature`
+3. Commit changes: `git commit -m 'Add amazing feature'`
+4. Push to branch: `git push origin feature/amazing-feature`
+5. Open Pull Request
+
+---
+
+## 📄 License
+
+MIT License - see [LICENSE](./LICENSE) file for details.
+
+Free for personal and commercial use!
+
+---
+
+## 🙏 Credits
+
+- **Author:** Drestanto Muhammad Dyasputro
+- **Inspired by:** Classic 7-segment LED displays
+- **Character mapping inspired by:** [CodePen: 0x04/AEjQwB](https://codepen.io/0x04/pen/AEjQwB)
 
 ---
 
 ## 📞 Support
 
-- **Issues:** [GitHub Issues](https://github.com/yourusername/7-segment-display/issues)
-- **Discussions:** [GitHub Discussions](https://github.com/yourusername/7-segment-display/discussions)
-- **Email:** your.email@example.com
+- **GitHub Issues:** [Report bugs](https://github.com/drestanto/seven-segment/issues)
+- **GitHub Discussions:** [Ask questions](https://github.com/drestanto/seven-segment/discussions)
+- **Email:** dyas@live.com
 
 ---
 
-## 🙏 Acknowledgments
+## ⭐ Show Your Support
 
-- Inspired by classic 7-segment LED displays
-- Character mapping inspired by [CodePen: 0x04/AEjQwB](https://codepen.io/0x04/pen/AEjQwB)
-- Built with ❤️ using vanilla JavaScript
+If you like this project, please give it a star on [GitHub](https://github.com/drestanto/seven-segment)!
 
 ---
 
-**Made with ❤️ by [Your Name]**
+**Built with ❤️ using vanilla JavaScript**
